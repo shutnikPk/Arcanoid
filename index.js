@@ -9,16 +9,25 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
 
     class Ball {
-        drawBall () {
+        constructor(ballWidth, ballHeight){
+            this.ballWidth = ballWidth;
+            this.ballHeight = ballHeight;
+        }
+
+        drawBall (ballWidth, ballHeight) {
             ctx.fillStyle = 'blue';
-            ctx.fillRect(365, 545, 15, 15);
+            ctx.fillRect(365, 545, ballWidth, ballHeight);
         }
     }
 
-    class Player {      
-        drawPlayer () {            
+    class Player {     
+        constructor (playerWidth, playerHeigth){
+            this.playerWidth = playerWidth;
+            this.playerHegth = playerHeigth;
+        }
+        drawPlayer (playerWidth, playerHeigth) {            
             ctx.fillStyle = 'green';
-            ctx.fillRect(325, 560, 100, 15);
+            ctx.fillRect(325, 560, playerWidth, playerHeigth);
         }
     }
 
@@ -82,10 +91,10 @@ window.addEventListener("DOMContentLoaded", ()=>{
     gameField.drawBlocks();
 
     let player = new Player();
-    player.drawPlayer();
+    player.drawPlayer(100, 15);
 
     let ball = new Ball();
-    ball.drawBall();
+    ball.drawBall(15,15);
     
 
     
