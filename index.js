@@ -21,13 +21,21 @@ window.addEventListener("DOMContentLoaded", ()=>{
     }
 
     class Player {     
-        constructor (playerWidth, playerHeigth){
+        constructor (x, playerWidth, playerHeigth){
             this.playerWidth = playerWidth;
             this.playerHegth = playerHeigth;
+            this.x = x;
         }
         drawPlayer (playerWidth, playerHeigth) {            
             ctx.fillStyle = 'green';
             ctx.fillRect(325, 560, playerWidth, playerHeigth);
+        }
+
+        playerMove(e) {
+            let x = e.pageX;
+            
+                player.x = x - player.playerHeigth / 2;
+            
         }
     }
 
@@ -91,14 +99,14 @@ window.addEventListener("DOMContentLoaded", ()=>{
     gameField.drawBlocks();
 
     let player = new Player();
-    player.drawPlayer(100, 15);
+    setInterval(player.drawPlayer(100, 15), 1000 / 50);
 
     let ball = new Ball();
     ball.drawBall(15,15);
     
 
-    
-
+    //setInterval(player.drawPlayer(100, 15), 1000 / 50);
+    canvas.onmousemove = player.playerMove(canvas);
     /*let destoyedBlock = new BorderBlock();
     destoyedBlock.drawBlock(25,25,93.75,30,'red','black');*/
 
