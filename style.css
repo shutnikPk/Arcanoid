@@ -7,10 +7,9 @@ body{
 
 div{
     display: grid;
-    width: 810px;
-    height: 610px;
+    padding: 10px;
     background-color: #fafafa;
     box-shadow: 0px 0px 20px 3px rgba(77, 78, 139, 0.5);
-    justify-content: center;
-    align-items: center;
+    /*justify-content: center;
+    align-items: center;*/
 }
