@@ -1,4 +1,12 @@
 body{
-    margin: 0 auto;
-    background-color: #fafafa;
+    margin: 20 auto;
+    background-color: #f5f5f5;
+    display: grid;
+    justify-content: center;
+}
+
+div{
+ width: 810px;
+ height: 610px;
+ background-color: #fafafa;
 }
