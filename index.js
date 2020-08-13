@@ -5,7 +5,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     canvas.height = 600;
     let ctx = canvas.getContext('2d');
     document.body.prepend(containerTag);
-    document.body.firstChild.appendChild(canvas);    
+    document.body.firstChild.appendChild(canvas);   
+    
+
 
 
     class Ball {
@@ -29,11 +31,11 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
         speedX = 0;
 
-        movePlayer () {
-            window.addEventListener('mousemove', function (e) {
-                x = e.pageX;               
-            })
+        newPos () {
+            this.x += this.speedX;    
+                     
         }
+
 
         drawPlayer () {            
             ctx.fillStyle = 'green';
@@ -69,13 +71,18 @@ window.addEventListener("DOMContentLoaded", ()=>{
     }
 
     class Map {
+
+        constructor(x){            
+            this.x=x;
+            this.key;
+        }
          field = [ 
             [{x:0, y:0}, {x:0, y:1}, {x:0, y:2}, {x:0, y:3}, {x:0, y:4}, {x:0, y:5}, {x:0, y:6}, {x:0, y:7}],
             [{x:1, y:0}, {x:1, y:1}, {x:1, y:2}, {x:1, y:3}, {x:1, y:4}, {x:1, y:5}, {x:1, y:6}, {x:1, y:7}],
             [{x:2, y:0}, {x:2, y:1}, {x:2, y:2}, {x:2, y:3}, {x:2, y:4}, {x:2, y:5}, {x:2, y:6}, {x:2, y:7}],
             [{x:3, y:0}, {x:3, y:1}, {x:3, y:2}, {x:3, y:3}, {x:3, y:4}, {x:3, y:5}, {x:3, y:6}, {x:3, y:7}],
             [{x:5, y:0}, {x:5, y:1}, {x:5, y:2}, {x:5, y:3}, {x:5, y:4}, {x:5, y:5}, {x:5, y:6}, {x:5, y:7}]
-        ];
+        ];        
 
         drawBlocks () {
             let destroyedBlock = [];
@@ -98,24 +105,33 @@ window.addEventListener("DOMContentLoaded", ()=>{
         clearZone () {
             ctx.clearRect(25, 560, 750, 15);
         }
+        
 
         interval = setInterval(updateGameArea, 20);
 
     }    
 
-    
 
-    let gameField = new Map();
-    gameField.drawBlocks();
 
-    let player = new Player (0,100,15);    
+    let player = new Player (0,100,15);  
+    let gameField = new Map(0);
+    gameField.drawBlocks();        
 
-    //let ball = new Ball();
-    //ball.drawBall(15,15);
-    
-    function updateGameArea() {
-        gameField.clearZone();
-        player.drawPlayer();
-        player.x += 1;
+    console.log(gameField);
+
+    window.addEventListener('keydown', function (e) {
+        gameField.key = e.keyCode;
+        console.log(this.key);
+    })
+    window.addEventListener('keyup', function (e) {
+        gameField.key = false;               
+    })   
+
+    function updateGameArea() {        
+        gameField.clearZone();           
+        if (gameField.key && gameField.key == 37) {player.speedX = -1;/*console.log(gameField.key)*/}
+        if (gameField.key && gameField.key == 39) {player.speedX = 1;/*console.log(gameField.key)*/}        
+        player.newPos();
+        player.drawPlayer();        
     }
 })
