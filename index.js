@@ -26,17 +26,20 @@ window.addEventListener("DOMContentLoaded", ()=>{
             this.playerHegth = playerHeigth;
             this.x = x;
         }
-        drawPlayer (playerWidth, playerHeigth) {            
-            ctx.fillStyle = 'green';
-            ctx.fillRect(325, 560, playerWidth, playerHeigth);
+
+        speedX = 0;
+
+        movePlayer () {
+            window.addEventListener('mousemove', function (e) {
+                x = e.pageX;               
+            })
         }
 
-        playerMove(e) {
-            let x = e.pageX;
-            
-                player.x = x - player.playerHeigth / 2;
-            
-        }
+        drawPlayer () {            
+            ctx.fillStyle = 'green';
+            ctx.fillRect(325+this.x, 560, 100, 15);
+        }     
+         
     }
 
     class Block {
@@ -82,34 +85,37 @@ window.addEventListener("DOMContentLoaded", ()=>{
                     destroyedBlock[row][cell] = new BorderBlock();
                     destroyedBlock[row][cell].drawBlock(25 + cell * 93.75, 25 + row * 30, 93.75, 30, 'red', 'black');
                 }
-            }          
+            } 
+            let topBorder = new Block(false);
+            topBorder.drawBlock(0, 0, 800, 25, 'gray');
+            let sideBorder = new Block(false);
+            sideBorder.drawBlock(0, 0, 25, 600, 'gray');
+            sideBorder.drawBlock(0, 575, 800, 25, 'gray');
+            let bottomBorder = new Block(false);
+            bottomBorder.drawBlock(775, 0, 25, 600, 'gray');         
         }
+
+        clearZone () {
+            ctx.clearRect(25, 560, 750, 15);
+        }
+
+        interval = setInterval(updateGameArea, 20);
 
     }    
 
-    let topBorder = new Block(false);
-    topBorder.drawBlock(0, 0, 800, 25, 'gray');
-    let sideBorder = new Block(false);
-    sideBorder.drawBlock(0, 0, 25, 600, 'gray');
-    sideBorder.drawBlock(0, 575, 800, 25, 'gray');
-    let bottomBorder = new Block(false);
-    bottomBorder.drawBlock(775, 0, 25, 600, 'gray');
+    
 
     let gameField = new Map();
     gameField.drawBlocks();
 
-    let player = new Player();
-    setInterval(player.drawPlayer(100, 15), 1000 / 50);
+    let player = new Player (0,100,15);    
 
-    let ball = new Ball();
-    ball.drawBall(15,15);
+    //let ball = new Ball();
+    //ball.drawBall(15,15);
     
-
-    //setInterval(player.drawPlayer(100, 15), 1000 / 50);
-    canvas.onmousemove = player.playerMove(canvas);
-    /*let destoyedBlock = new BorderBlock();
-    destoyedBlock.drawBlock(25,25,93.75,30,'red','black');*/
-
-
-
+    function updateGameArea() {
+        gameField.clearZone();
+        player.drawPlayer();
+        player.x += 1;
+    }
 })
