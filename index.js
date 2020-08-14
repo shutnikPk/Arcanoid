@@ -17,8 +17,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
             this.isDestroyed = isDestroyed;            
         }
 
-        
-
         drawObj (color) {            
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -34,11 +32,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
         newPosY () {
             this.y += this.speedY;    
                      
-        }
-
-        destroyBlock () {            
-            //ctx.clearRect(x, y, blockWidth, blockHeight);
-            delete this;
         }
 
         onClosion (otherobj) {
@@ -81,10 +74,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
         }
         interval = setInterval(updateGameArea, 20);
     }    
-
-
-
-
     
 
     let topBorder = new gameObj(0, 0, 800, 25, false);
@@ -100,20 +89,20 @@ window.addEventListener("DOMContentLoaded", ()=>{
     let player = new gameObj (325, 560, 100, 15, false);  
     let ball = new gameObj (350, 533, 25, 25, false);
     let gameField = new Map(0);
-  // gameField.createBlocks();
+
     createBlocks();     
 
     ball.speedY = 2;
     ball.speedX = 2;
 
-    player.speedX = 0;
+    
 
     window.addEventListener('keydown', function (e) {
         gameField.key = e.keyCode;
         
     })
     window.addEventListener('keyup', function (e) {
-        gameField.key = false;  console.log(gameField.key);             
+        gameField.key = false; // console.log(gameField.key);             
     })   
 
 
@@ -128,39 +117,35 @@ window.addEventListener("DOMContentLoaded", ()=>{
          return destroyedBlock;
      }
 
+     
+     let tempArgs = createBlocks ();
+     tempArgs=tempArgs.flat(2);
+
      function drawDestroyedBlocks(){
-        for (let row = 0; row < gameField.field.length; row++){           
-            for (let cell = 0; cell < gameField.field[row].length; cell++){                  
-                createBlocks()[row][cell].drawObj('orange');               
-            }
-        } 
-    }
-
-   // console.log(gameField.createBlocks());
-
-       /* let tempArgs = gameField.createBlocks();
-        tempArgs=tempArgs.flat(2);
         for (let index = 0; index < tempArgs.length; index++) {
-            console.log(tempArgs[index]);
-           
-             
+            if(tempArgs[index]){tempArgs[index].drawObj('orange')} 
          }
-            if(ball.onClosion(tempArgs)){console.log('sa')}
-        //console.log(tempArgs);*/
+    }
+   
   
     function updateGameArea() {        
         gameField.clearZone(25, 560, 750, 15);    
         gameField.clearZone(24, 24, 751, 550); 
-        drawDestroyedBlocks();
-        
 
-       //console.log('playerCenter is '+player.newCenterX ());
-        //console.log(ball.x);        
+        player.speedX = 0;
+
+        drawDestroyedBlocks();           
+    
+        for (let index = 0; index < tempArgs.length; index++) {
+            if(tempArgs[index]&&ball.onClosion(tempArgs[index])){tempArgs[index]=undefined;console.log('colision')}
+    
+         } 
+
         if(ball.onClosion(leftBorder)||ball.onClosion(rigthBorder)){ ball.speedX *=-1; /*console.log('sideBorder')*/}
         if(ball.onClosion(topBorder)){ ball.speedY *=-1;/* console.log('topBorder')*/} 
         if(ball.onClosion(player)&&ball.x<player.newCenterX()){ ball.speedY *=-1;ball.speedX *=-1;/* console.log('player')*/}
         if(ball.onClosion(player)&&ball.x>player.newCenterX()){ ball.speedY *=-1;/* console.log('player');*/}   
-        if(ball.onClosion(bottomBorder)){ ball.speedY *=-1;clearInterval(gameField.interval);/*console.log('gameOwer')*/}        
+        if(ball.onClosion(bottomBorder)){ ball.speedY *=-1;clearInterval(gameField.interval);console.log(tempArgs);/*console.log('gameOwer')*/}        
         if (gameField.key && gameField.key == 37) {player.speedX = -10;}
         if (gameField.key && gameField.key == 39) {player.speedX = 10;}              
         player.newPosX();
