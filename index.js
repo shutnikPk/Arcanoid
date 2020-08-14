@@ -8,25 +8,97 @@ window.addEventListener("DOMContentLoaded", ()=>{
     document.body.firstChild.appendChild(canvas);   
     
 
-
-
-    class Ball {
-        constructor(ballWidth, ballHeight){
+    class gameObj{
+        constructor(x, y, ballWidth, ballHeight, color, isDestroyed){
+            this.x = x;
+            this.y = y;
             this.ballWidth = ballWidth;
             this.ballHeight = ballHeight;
+            this.color = color;
+            this.isDestroyed = isDestroyed;
+        }
+        drawObj () {            
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.ballWidth, this.ballHeight);
+        }
+        
+        newPosX () {
+            this.x += this.speedX;    
+                     
+        }
+        newPosY () {
+            this.Y += this.speedY;    
+                     
+        }
+
+        destroyBlock (x, y, blockWidth, blockHeight) {            
+            ctx.clearRect(x, y, blockWidth, blockHeight);
+            delete this;
+        }
+
+        crashWith (otherobj) {
+            let myleft = this.x;
+            let myright = this.x + (this.width);
+            let mytop = this.y;
+            let mybottom = this.y + (this.height);
+            let otherleft = otherobj.x;
+            let otherright = otherobj.x + (otherobj.width);
+            let othertop = otherobj.y;
+            let otherbottom = otherobj.y + (otherobj.height);
+            let crash = true;
+            if ((mybottom < othertop) ||
+            (mytop > otherbottom) ||
+            (myright < otherleft) ||
+            (myleft > otherright)) {
+              crash = false;
+            }
+            return crash;
+  
+
+        }
+    }
+
+    /*class Ball {
+        constructor(x, y, ballWidth, ballHeight){
+            this.ballWidth = ballWidth;
+            this.ballHeight = ballHeight;
+            this.x = x;
+            this.y = y;
         }
 
         drawBall (ballWidth, ballHeight) {
             ctx.fillStyle = 'blue';
             ctx.fillRect(365, 545, ballWidth, ballHeight);
         }
+
+        crashWith (otherobj) {
+            myleft = this.x;
+            myright = this.x + (this.width);
+            mytop = this.y;
+            mybottom = this.y + (this.height);
+            otherleft = otherobj.x;
+            otherright = otherobj.x + (otherobj.width);
+            othertop = otherobj.y;
+            otherbottom = otherobj.y + (otherobj.height);
+            crash = true;
+            if ((mybottom < othertop) ||
+            (mytop > otherbottom) ||
+            (myright < otherleft) ||
+            (myleft > otherright)) {
+              crash = false;
+            }
+            return crash;
+  
+
+        }
     }
 
     class Player {     
-        constructor (x, playerWidth, playerHeigth){
+        constructor (x, y,playerWidth, playerHeigth){
             this.playerWidth = playerWidth;
             this.playerHegth = playerHeigth;
             this.x = x;
+            this.y = y;
         }
 
         speedX = 0;
@@ -39,7 +111,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
         drawPlayer () {            
             ctx.fillStyle = 'green';
-            ctx.fillRect(325+this.x, 560, 100, 15);
+            ctx.fillRect(325+this.x, 560+this.y, 100, 15);
         }     
          
     }
@@ -68,7 +140,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
             ctx.fillRect(x+1, y+1, blockWidth-2, blockHeight-2);
         }
         isDestroyed = true;        
-    }
+    }*/
 
     class Map {
 
@@ -113,22 +185,23 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
 
 
-    let player = new Player (0,100,15);  
+    let player = new Player (0, 0, 100, 15);  
     let gameField = new Map(0);
     gameField.drawBlocks();        
 
-    console.log(gameField);
+    //console.log(gameField);
 
     window.addEventListener('keydown', function (e) {
         gameField.key = e.keyCode;
-        console.log(this.key);
+        
     })
     window.addEventListener('keyup', function (e) {
-        gameField.key = false;               
+        gameField.key = false;  console.log(this.key);             
     })   
 
     function updateGameArea() {        
-        gameField.clearZone();           
+        gameField.clearZone();    
+        player.speedX = 0;       
         if (gameField.key && gameField.key == 37) {player.speedX = -1;/*console.log(gameField.key)*/}
         if (gameField.key && gameField.key == 39) {player.speedX = 1;/*console.log(gameField.key)*/}        
         player.newPos();
