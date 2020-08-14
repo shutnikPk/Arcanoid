@@ -9,25 +9,30 @@ window.addEventListener("DOMContentLoaded", ()=>{
     
 
     class gameObj{
-        constructor(x, y, ballWidth, ballHeight, color, isDestroyed){
+        constructor(x, y, width,height, isDestroyed){
             this.x = x;
             this.y = y;
-            this.ballWidth = ballWidth;
-            this.ballHeight = ballHeight;
-            this.color = color;
-            this.isDestroyed = isDestroyed;
+            this.width = width;
+            this.height = height;            
+            this.isDestroyed = isDestroyed;            
         }
-        drawObj () {            
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.ballWidth, this.ballHeight);
-        }
+
         
+
+        drawObj (color) {            
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        newCenterX () {
+            return this.center = this.x + this.width/2;    
+                     
+        }
         newPosX () {
             this.x += this.speedX;    
                      
         }
         newPosY () {
-            this.Y += this.speedY;    
+            this.y += this.speedY;    
                      
         }
 
@@ -36,7 +41,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
             delete this;
         }
 
-        crashWith (otherobj) {
+        onClosion (otherobj) {
             let myleft = this.x;
             let myright = this.x + (this.width);
             let mytop = this.y;
@@ -52,95 +57,10 @@ window.addEventListener("DOMContentLoaded", ()=>{
             (myleft > otherright)) {
               crash = false;
             }
-            return crash;
-  
+            return crash;  
 
         }
     }
-
-    /*class Ball {
-        constructor(x, y, ballWidth, ballHeight){
-            this.ballWidth = ballWidth;
-            this.ballHeight = ballHeight;
-            this.x = x;
-            this.y = y;
-        }
-
-        drawBall (ballWidth, ballHeight) {
-            ctx.fillStyle = 'blue';
-            ctx.fillRect(365, 545, ballWidth, ballHeight);
-        }
-
-        crashWith (otherobj) {
-            myleft = this.x;
-            myright = this.x + (this.width);
-            mytop = this.y;
-            mybottom = this.y + (this.height);
-            otherleft = otherobj.x;
-            otherright = otherobj.x + (otherobj.width);
-            othertop = otherobj.y;
-            otherbottom = otherobj.y + (otherobj.height);
-            crash = true;
-            if ((mybottom < othertop) ||
-            (mytop > otherbottom) ||
-            (myright < otherleft) ||
-            (myleft > otherright)) {
-              crash = false;
-            }
-            return crash;
-  
-
-        }
-    }
-
-    class Player {     
-        constructor (x, y,playerWidth, playerHeigth){
-            this.playerWidth = playerWidth;
-            this.playerHegth = playerHeigth;
-            this.x = x;
-            this.y = y;
-        }
-
-        speedX = 0;
-
-        newPos () {
-            this.x += this.speedX;    
-                     
-        }
-
-
-        drawPlayer () {            
-            ctx.fillStyle = 'green';
-            ctx.fillRect(325+this.x, 560+this.y, 100, 15);
-        }     
-         
-    }
-
-    class Block {
-        constructor (isDestroyed){
-            this.isDestroyed = isDestroyed;           
-        }
-        drawBlock (x, y, blockWidth, blockHeight, fillColor) {            
-            ctx.fillStyle = fillColor;
-            ctx.fillRect(x, y, blockWidth, blockHeight);
-        }
-
-        destroyBlock (x, y, blockWidth, blockHeight) {            
-            ctx.clearRect(x, y, blockWidth, blockHeight);
-            delete this;
-        }
-
-    }
-
-    class BorderBlock extends Block {
-        drawBlock (x, y, blockWidth, blockHeight, borderColor, fillColor){           
-            ctx.strokeStyle = borderColor;
-            ctx.strokeRect(x, y, blockWidth, blockHeight);            
-            ctx.fillStyle = fillColor;
-            ctx.fillRect(x+1, y+1, blockWidth-2, blockHeight-2);
-        }
-        isDestroyed = true;        
-    }*/
 
     class Map {
 
@@ -161,50 +81,68 @@ window.addEventListener("DOMContentLoaded", ()=>{
             for (let row = 0; row < this.field.length; row++){
                 destroyedBlock[row] = [];
                 for (let cell = 0; cell < this.field[row].length; cell++){  
-                    destroyedBlock[row][cell] = new BorderBlock();
-                    destroyedBlock[row][cell].drawBlock(25 + cell * 93.75, 25 + row * 30, 93.75, 30, 'red', 'black');
+                    destroyedBlock[row][cell] = new gameObj(25 + cell * 93.75, 24.5 + row * 30, 93.6, 30, true);
+                    destroyedBlock[row][cell].drawObj('orange');
                 }
             } 
-            let topBorder = new Block(false);
-            topBorder.drawBlock(0, 0, 800, 25, 'gray');
-            let sideBorder = new Block(false);
-            sideBorder.drawBlock(0, 0, 25, 600, 'gray');
-            sideBorder.drawBlock(0, 575, 800, 25, 'gray');
-            let bottomBorder = new Block(false);
-            bottomBorder.drawBlock(775, 0, 25, 600, 'gray');         
+
         }
 
-        clearZone () {
-            ctx.clearRect(25, 560, 750, 15);
+        clearZone (x, y, width, heigth) {
+            ctx.clearRect(x, y, width, heigth);
         }
-        
 
         interval = setInterval(updateGameArea, 20);
 
     }    
 
+    let topBorder = new gameObj(0, 0, 800, 25, false);
+    topBorder.drawObj('gray');
+    let leftBorder = new gameObj(0, 0, 25, 600, false);
+    leftBorder.drawObj('gray');
+    let bottomBorder = new gameObj(0, 575, 800, 25, false);
+    bottomBorder.drawObj('gray');
+    let rigthBorder = new gameObj(775, 0, 25, 600, false);
+    rigthBorder.drawObj('gray');
 
 
-    let player = new Player (0, 0, 100, 15);  
+    let player = new gameObj (325, 560, 100, 15, false);  
+    let ball = new gameObj (350, 533, 25, 25, false);
     let gameField = new Map(0);
     gameField.drawBlocks();        
 
-    //console.log(gameField);
+    ball.speedY = 2;
+    ball.speedX = 2;
 
     window.addEventListener('keydown', function (e) {
         gameField.key = e.keyCode;
         
     })
     window.addEventListener('keyup', function (e) {
-        gameField.key = false;  console.log(this.key);             
+        gameField.key = false;  console.log(gameField.key);             
     })   
 
     function updateGameArea() {        
-        gameField.clearZone();    
-        player.speedX = 0;       
-        if (gameField.key && gameField.key == 37) {player.speedX = -1;/*console.log(gameField.key)*/}
-        if (gameField.key && gameField.key == 39) {player.speedX = 1;/*console.log(gameField.key)*/}        
-        player.newPos();
-        player.drawPlayer();        
+        gameField.clearZone(25, 560, 750, 15);    
+        gameField.clearZone(25, 25, 750, 550); 
+        player.speedX = 0;
+        
+        console.log('playerCenter is '+player.newCenterX ());
+        console.log(ball.x);
+        if(ball.onClosion(leftBorder)||ball.onClosion(rigthBorder)){ ball.speedX *=-1; console.log('sideBorder');}
+        if(ball.onClosion(topBorder)){ ball.speedY *=-1; console.log('topBorder');} 
+        if(ball.onClosion(player)&&ball.x<player.newCenterX()){ ball.speedY *=-1;ball.speedX *=-1; console.log('player');}
+        if(ball.onClosion(player)&&ball.x>player.newCenterX()){ ball.speedY *=-1; console.log('player');}   
+        if(ball.onClosion(bottomBorder)){ ball.speedY *=-1;clearInterval(gameField.interval);console.log('gameOwer')}        
+        if (gameField.key && gameField.key == 37) {player.speedX = -10;}
+        if (gameField.key && gameField.key == 39) {player.speedX = 10;}              
+        player.newPosX();
+        player.newCenterX();
+        ball.newPosY();
+        ball.newPosX();
+        player.drawObj('green');   
+        ball.drawObj('red');    
     }
+
+
 })
