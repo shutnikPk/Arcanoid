@@ -76,14 +76,11 @@ window.addEventListener("DOMContentLoaded", ()=>{
     }    
     
 
-    let topBorder = new gameObj(0, 0, 800, 25, false);
-    topBorder.drawObj('gray');
-    let leftBorder = new gameObj(0, 0, 25, 600, false);
-    leftBorder.drawObj('gray');
-    let bottomBorder = new gameObj(0, 575, 800, 25, false);
-    bottomBorder.drawObj('gray');
+    let topBorder = new gameObj(0, 0, 800, 25, false); 
+    let leftBorder = new gameObj(0, 0, 25, 600, false);  
+    let bottomBorder = new gameObj(0, 575, 800, 25, false);    
     let rigthBorder = new gameObj(775, 0, 25, 600, false);
-    rigthBorder.drawObj('gray');
+   
 
 
     let player = new gameObj (325, 560, 100, 15, false);  
@@ -132,6 +129,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
         gameField.clearZone(25, 560, 750, 15);    
         gameField.clearZone(24, 24, 751, 550); 
 
+
         player.speedX = 0;
 
         drawDestroyedBlocks();           
@@ -139,21 +137,27 @@ window.addEventListener("DOMContentLoaded", ()=>{
         for (let index = 0; index < tempArgs.length; index++) {
             if(tempArgs[index]&&ball.onClosion(tempArgs[index])){tempArgs[index]=undefined;console.log('colision')}
     
-         } 
-
-        if(ball.onClosion(leftBorder)||ball.onClosion(rigthBorder)){ ball.speedX *=-1; /*console.log('sideBorder')*/}
-        if(ball.onClosion(topBorder)){ ball.speedY *=-1;/* console.log('topBorder')*/} 
-        if(ball.onClosion(player)&&ball.x<player.newCenterX()){ ball.speedY *=-1;ball.speedX *=-1;/* console.log('player')*/}
-        if(ball.onClosion(player)&&ball.x>player.newCenterX()){ ball.speedY *=-1;/* console.log('player');*/}   
-        if(ball.onClosion(bottomBorder)){ ball.speedY *=-1;clearInterval(gameField.interval);console.log(tempArgs);/*console.log('gameOwer')*/}        
-        if (gameField.key && gameField.key == 37) {player.speedX = -10;}
-        if (gameField.key && gameField.key == 39) {player.speedX = 10;}              
+         }
+        if (ball.onClosion(leftBorder)||ball.onClosion(rigthBorder)){ ball.speedX *=-1; /*console.log('sideBorder')*/}
+        if (ball.onClosion(topBorder)){ ball.speedY *=-1;/* console.log('topBorder')*/} 
+        if (ball.onClosion(player)&&ball.x<player.newCenterX()){ ball.speedY *=-1;ball.speedX *=-1;/* console.log('player')*/}
+        if (ball.onClosion(player)&&ball.x>player.newCenterX()){ ball.speedY *=-1;/* console.log('player');*/}   
+        if (ball.onClosion(bottomBorder)){ ball.speedY *=-1;clearInterval(gameField.interval);console.log(tempArgs);/*console.log('gameOwer')*/}        
+        if (!player.onClosion(leftBorder)&&!player.onClosion(rigthBorder)&&gameField.key && gameField.key == 37) {player.speedX = -10;}
+        if (!player.onClosion(leftBorder)&&!player.onClosion(rigthBorder)&&gameField.key && gameField.key == 39) {player.speedX = 10;}
+        if (player.onClosion(leftBorder)) {player.x += 1}
+        if (player.onClosion(rigthBorder)) {player.x -= 1}              
         player.newPosX();
         player.newCenterX();
         ball.newPosY();
         ball.newPosX();
         player.drawObj('green');   
-        ball.drawObj('red');    
+        ball.drawObj('red');  
+        topBorder.drawObj('gray');
+        leftBorder.drawObj('gray');
+        bottomBorder.drawObj('gray');
+        rigthBorder.drawObj('gray'); 
+         
     }
 
 
